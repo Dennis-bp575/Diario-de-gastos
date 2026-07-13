@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cashTotal = cashTotal - gasto;
 
     // 2. Lógica Acumulativa: Calcula a diferença do dia
-    const sobraOuDificit doDia = metaDiaria - gasto;
+    const sobraOuDificitdoDia = metaDiaria - gasto;
 
     // 3. O saldo de amanhã recebe a meta do próximo dia + a sobra/déficit de hoje
-    saldoAcumulado = metaDiaria + sobraOuDificit doDia;
+    saldoAcumulado = metaDiaria + sobraOuDificitdoDia;
 
     // Limpa o campo de gasto e atualiza a tela
     inputGastoHoje.value = '';
