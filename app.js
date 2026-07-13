@@ -11,12 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Variáveis para controlar os valores na memória do app
   let cashTotal = parseFloat(inputCashTotal.value) || 0;
   let metaDiaria = parseFloat(inputMetaDiaria.value) || 0;
+  let dias = atualizarDiasRestantes();
+  let cashTotalRestante = dias * metaDiaria;
   let saldoAcumulado = metaDiaria; // Começa valendo a meta do primeiro dia
 
   // Função simples para atualizar os textos na tela
   function atualizarTela() {
     txtSaldoAmanha.textContent = `R$ ${saldoAcumulado.toFixed(2)}`;
-    txtCashRestante.textContent = `R$ ${cashTotal.toFixed(2)}`;
+    txtCashRestante.textContent = `R$ ${cashTotalRestante.toFixed(2)}`;
 
     // Muda a cor do saldo para vermelho se ficar negativo
     if (saldoAcumulado < 0) {
@@ -55,9 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Subtrai o dia de hoje do total de dias do mês
       const diasRestantes = ultimoDiaDoMes - hoje.getDate();
-      
+
       // Atualiza o texto na tela
       document.getElementById('dias-restantes').innerText = diasRestantes;
+
+      return diasRestantes; 
   }
   
   // Executa a função ao carregar a página
