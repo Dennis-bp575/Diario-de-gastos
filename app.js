@@ -43,6 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
     inputGastoHoje.value = '';
     atualizarTela();
   });
+  function atualizarDiasRestantes() {
+      const hoje = new Date();
+      
+      // Obtém o ano e o mês atual
+      const anoAtual = hoje.getFullYear();
+      const mesAtual = hoje.getMonth(); // 0 = Janeiro, 11 = Dezembro
+      
+      // O dia "0" do próximo mês retorna o último dia do mês atual (30, 31, 28 ou 29)
+      const ultimoDiaDoMes = new Date(anoAtual, mesAtual + 1, 0).getDate();
+      
+      // Subtrai o dia de hoje do total de dias do mês
+      const diasRestantes = ultimoDiaDoMes - hoje.getDate();
+      
+      // Atualiza o texto na tela
+      document.getElementById('dias-restantes').innerText = diasRestantes;
+  }
+  
+  // Executa a função ao carregar a página
+  window.addEventListener('DOMContentLoaded', atualizarDiasRestantes);
+
 
   // Atualiza as variáveis caso você altere os inputs de configuração no topo
   inputCashTotal.addEventListener('input', () => {
