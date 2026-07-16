@@ -123,8 +123,19 @@
 			let gastos = JSON.parse(localStorage.getItem("gastos_pro")) || [];
 
 			document.addEventListener('DOMContentLoaded', () => {
+			    // 1. Busca o montante salvo na gaveta independente
+			    let montanteSalvo = localStorage.getItem('montanteInicialSalvo');
+			    // 2. Se ele existir, coloca na tela formatado como moeda
+			    if (montanteSalvo) {
+			        textoMontante.textContent = parseFloat(montanteSalvo).toLocaleString('pt-BR', {
+			            style: 'currency',
+			            currency: 'BRL'
+			        });
+			    }
+			    // 3. Roda o cálculo dos dias restantes
 			    calcularDiasRestantes();
 			});
+
 
 			// Função para calcular os dias restantes (Corrigida sem o listener interno)
 			function calcularDiasRestantes() {
