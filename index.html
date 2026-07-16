@@ -70,11 +70,15 @@
 					    </button>
 					</div>
 
-
 		  			<div id="displayTotal"
-		       			class="text-3xl font-extrabold leading-none">
+		       			class="text-2xl font-extrabold leading-none">
 		    				R$ 0,00
 		  			</div>
+					<div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-center my-6 shadow-sm">
+		                <div class="text-slate-800 font-semibold text-lg">
+		                    Dias restantes: <span id="dias-restantes" class="text-blue-600 font-bold text-2xl">--</span>
+		                </div>
+		            </div>
 		  			<div id="nomeMes"
 		       			class="text-base mt-3 opacity-90 font-medium">
 		    				MAIO 2026
@@ -107,57 +111,77 @@
   		</div>
 
 		<script>
-		let abaAtual = 0;
-		let gastos = JSON.parse(localStorage.getItem("gastos_pro")) || [];
+			
+			const btnEditar = document.getElementById('btnEditarMontante');
+			const inputDecimal = document.getElementById('inputDecimalEscondido');
+			const textoMontante = document.getElementById('montanteInicial');
+			const txtDiasRestantes = document.getElementById('dias-restantes');
+			
+			let abaAtual = 0;
+			let gastos = JSON.parse(localStorage.getItem("gastos_pro")) || [];
 
-		function getMesReferencia(offset) {
-			const d = new Date();
-			d.setMonth(d.getMonth() + offset);
-			const meses = ["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
-			return `${meses[d.getMonth()]} ${d.getFullYear()}`;
-		}
+			document.addEventListener('DOMContentLoaded', () => {
+			    calcularDiasRestantes();
+			});
 
-	    function mudarAba(index) {
-	      abaAtual = index;
-	      document.querySelectorAll('[id^="tab"]').forEach(el =>
-	        el.classList.remove('aba-ativa','text-slate-900'));
-	      document.getElementById('tab' + index).classList.add('aba-ativa');
-	      renderizar();
-	    }
+			// Função para calcular os dias restantes (Corrigida sem o listener interno)
+			function calcularDiasRestantes() {
+				const hoje = new Date();
+				const anoAtual = hoje.getFullYear();
+				const mesAtual = hoje.getMonth(); 
+				const ultimoDiaDoMes = new Date(anoAtual, mesAtual + 1, 0).getDate();
+				const diasRestantes = ultimoDiaDoMes - hoje.getDate();
+				
+				if (txtDiasRestantes) {
+				  	txtDiasRestantes.innerText = diasRestantes;
+				}
+			return diasRestantes; 
+			}
+	
+			function getMesReferencia(offset) {
+				const d = new Date();
+				d.setMonth(d.getMonth() + offset);
+				const meses = ["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
+				return `${meses[d.getMonth()]} ${d.getFullYear()}`;
+			}
 
-	    const btnEditar = document.getElementById('btnEditarMontante');
-		const inputDecimal = document.getElementById('inputDecimalEscondido');
-		const textoMontante = document.getElementById('montanteInicial');
-		
-		btnEditar.addEventListener('click', () => {
-		    // Exibe o input e foca nele (abrindo o teclado numérico com ponto/vírgula no celular)
-		    inputDecimal.classList.remove('hidden');
-		    inputDecimal.focus();
-		});
-		
-		// Quando o usuário terminar de digitar e clicar fora (ou der enter)
-		inputDecimal.addEventListener('blur', () => {
-		    let valorDigitado = parseFloat(inputDecimal.value);
-		    
-		    if (!isNaN(valorDigitado)) {
-		        // Formata o valor digitado COM decimais
-		        textoMontante.textContent = valorDigitado.toLocaleString('pt-BR', {
-		            style: 'currency',
-		            currency: 'BRL'
-		        });
+		    function mudarAba(index) {
+		      abaAtual = index;
+		      document.querySelectorAll('[id^="tab"]').forEach(el =>
+		        el.classList.remove('aba-ativa','text-slate-900'));
+		      document.getElementById('tab' + index).classList.add('aba-ativa');
+		      renderizar();
 		    }
-		    
-		    // Esconde o input novamente
-		    inputDecimal.classList.add('hidden');
-		    inputDecimal.value = ''; 
-		});
+
+			btnEditar.addEventListener('click', () => {
+			    // Exibe o input e foca nele (abrindo o teclado numérico com ponto/vírgula no celular)
+			    inputDecimal.classList.remove('hidden');
+			    inputDecimal.focus();
+			});
 		
-		// Permite salvar também apertando a tecla Enter
-		inputDecimal.addEventListener('keydown', (e) => {
-		    if (e.key === 'Enter') {
-		        inputDecimal.blur(); // Dispara o evento 'blur' acima
-		    }
-		});
+			// Quando o usuário terminar de digitar e clicar fora (ou der enter)
+			inputDecimal.addEventListener('blur', () => {
+			    let valorDigitado = parseFloat(inputDecimal.value);
+			    
+			    if (!isNaN(valorDigitado)) {
+			        // Formata o valor digitado COM decimais
+			        textoMontante.textContent = valorDigitado.toLocaleString('pt-BR', {
+			            style: 'currency',
+			            currency: 'BRL'
+			        });
+				}
+		    
+			    // Esconde o input novamente
+			    inputDecimal.classList.add('hidden');
+			    inputDecimal.value = ''; 
+			});
+		
+			// Permite salvar também apertando a tecla Enter
+			inputDecimal.addEventListener('keydown', (e) => {
+			    if (e.key === 'Enter') {
+			        inputDecimal.blur(); // Dispara o evento 'blur' acima
+			    }
+			});
 
 
     function renderizar() {
