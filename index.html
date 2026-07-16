@@ -302,15 +302,38 @@
 						});
     				}
 
-				    // Adiciona o bloco completo configurado dentro da sua lista real na tela
+				  	// Adiciona o bloco completo configurado dentro da sua lista real na tela
 				    container.appendChild(divContainerGasto);
-				  }); // <--- Fechamento correto do forEach
+				  }); // <--- Fechamento existente do forEach
 
-				  displayTotal.innerText =
-				    `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
+				  // 🌟 NOVA LÓGICA DA META DIÁRIA 🌟
+				  
+				  // 1. Busca o montante inicial puro (gaveta independente) ou assume 0 se estiver vazio
+				  const montanteOriginal = parseFloat(localStorage.getItem('montanteInicialSalvo')) || 0;
+				  
+				  // 2. Descobre quantos dias faltam usando a função que você já tem pronta
+				  const diasQueFaltam = calcularDiasRestantes();
+				  
+				  // 3. Calcula o saldo que ainda sobrou para o mês
+				  const saldoDisponivel = montanteOriginal - total;
+				  
+				  // 4. Calcula a meta do dia (Evita divisão por zero se o mês estiver no último dia)
+				  let metaDiaria = 0;
+				  if (diasQueFaltam > 0) {
+				      metaDiaria = saldoDisponivel / diasQueFaltam;
+				  } else {
+				      metaDiaria = saldoDisponivel; // Se for o último dia, a meta é tudo o que sobrou
+				  }
+				  
+				  // 5. Se a meta ficar negativa (gastou mais que o montante), zera para não ficar feio
+				  if (metaDiaria < 0) metaDiaria = 0;
+
+				  // 6. Atualiza o display principal com o valor da meta diária recalculada
+				  displayTotal.innerText = `R$ ${metaDiaria.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 				
 				  localStorage.setItem("gastos_pro", JSON.stringify(gastos));
-			}
+			} // <--- Fechamento existente da função renderizar
+
 
 
   function incluirPorTexto(texto) {
