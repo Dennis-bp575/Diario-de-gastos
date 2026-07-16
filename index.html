@@ -70,9 +70,10 @@
 					    </button>
 					</div>
 
-		  			<div id="displayTotal"
-		       			class="text-2xl font-extrabold leading-none">
-		    				R$ 0,00
+		  			<div 
+		       			class="text-lg font-extrabold leading-none">
+						Meta do dia: 
+		    			<span id="displayTotal"> R$ 0,00 </span>
 		  			</div>
 					<!-- Bloco de Dias Restantes -->
 		            <div class="bg-blue-50 border border-blue-200 rounded-2xl py-2 text-center my-3 shadow-sm">
@@ -185,122 +186,116 @@
 			});
 
 
-    function renderizar() {
-		const container = document.getElementById('listaGastos');
-		const displayTotal = document.getElementById('displayTotal');
-		const nomeMesDisplay = document.getElementById('nomeMes');
-		const mesNome = getMesReferencia(abaAtual);
+		    function renderizar() {
+				const container = document.getElementById('listaGastos');
+				const displayTotal = document.getElementById('displayTotal');
+				const nomeMesDisplay = document.getElementById('nomeMes');
+				const mesNome = getMesReferencia(abaAtual);
+		
+				nomeMesDisplay.innerText = mesNome;
+				container.innerHTML = "";
+				let total = 0;
 
-		nomeMesDisplay.innerText = mesNome;
-		container.innerHTML = "";
-		let total = 0;
+				const gastosFiltrados = gastos.filter(g => g.mesRef === mesNome);
+		
+				if (gastosFiltrados.length === 0) {
+					container.innerHTML =
+					`<div class="text-center text-slate-300 py-12 italic">
+						Sem gastos em ${mesNome.toLowerCase()}
+					</div>`;
+				}
 
-		const gastosFiltrados = gastos.filter(g => g.mesRef === mesNome);
+				// Rodando cada gasto do mês selecionado
+				gastosFiltrados.forEach(item => {
+					total += item.valor;
+					const divContainerGasto = document.createElement('div');
+					divContainerGasto.className = "flex flex-col border-b border-slate-100 py-1";
+					divContainerGasto.innerHTML = `
+						<!-- LINHA PRINCIPAL -->
+						<div class="flex items-center justify-between px-3 h-8 w-full">
+							<span class="text-right font-bold text-slate-700 min-w-[20px]">${item.dia}</span>
+							<p>&nbsp</p>
 
-		if (gastosFiltrados.length === 0) {
-			container.innerHTML =
-			`<div class="text-center text-slate-300 py-12 italic">
-				Sem gastos em ${mesNome.toLowerCase()}
-			</div>`;
-		}
+							<!-- NOME (50%) -->
+							<div class="w-[50%] text-[20px] font-semibold text-slate-800 truncate text-left leading-none">
+								${item.nome.charAt(0).toUpperCase() + item.nome.slice(1).toLowerCase()}
+							</div>
 
-		// Rodando cada gasto do mês selecionado
-		gastosFiltrados.forEach(item => {
-			total += item.valor;
+							<!-- VALOR (30%) -->
+							<div class="w-[30%] text-right text-[16px] font-bold text-slate-700 leading-none">
+								R$ ${item.valor.toFixed(2)}
+							</div>
+							<p>&nbsp</p>
 
-			// CORREÇÃO 1: Criamos o container do item na memória para o clique funcionar individualmente
-			const divContainerGasto = document.createElement('div');
-			divContainerGasto.className = "flex flex-col border-b border-slate-100 py-1";
-
-			// CORREÇÃO 2: Montamos o HTML com a Linha Principal e a Sublista juntas dentro dele
-			divContainerGasto.innerHTML = `
-			<!-- LINHA PRINCIPAL -->
-			<div class="flex items-center justify-between px-3 h-8 w-full">
-				<span class="text-right font-bold text-slate-700 min-w-[20px]">${item.dia}</span>
-				<p>&nbsp</p>
-
-				<!-- NOME (50%) -->
-				
-				<div class="w-[50%] text-[20px] font-semibold text-slate-800 truncate text-left leading-none">
-					${item.nome.charAt(0).toUpperCase() + item.nome.slice(1).toLowerCase()}
-				</div>
-
-				<!-- VALOR (30%) -->
-				
-				<div class="w-[30%] text-right text-[16px] font-bold text-slate-700 leading-none">
-					R$ ${item.valor.toFixed(2)}
-				</div>
-				<p>&nbsp</p>
-
-				<!-- AÇÕES (20%) -->
-				<div class="w-[20%] flex justify-end gap-1 items-center">
-					<!-- A Seta só aparece se houver mais de 1 detalhe cadastrado -->
-						${item.detalhes && item.detalhes.length > 1 ? `
-						<button class="btn-seta
-						               w-6 h-6
-						               flex items-center justify-center
-						               rounded-full
-						               bg-blue-600
-						               text-white
-						               text-[11px]
-						               shadow-sm
-						               transition-all">
-						  ▼
-						</button>
-					` : '<div class="w-[24px]"></div>'}
+							<!-- AÇÕES (20%) -->
+							<div class="w-[20%] flex justify-end gap-1 items-center">
+								<!-- A Seta só aparece se houver mais de 1 detalhe cadastrado -->
+								${item.detalhes && item.detalhes.length > 1 ? `
+								<button class="btn-seta
+								               w-6 h-6
+								               flex items-center justify-center
+								               rounded-full
+								               bg-blue-600
+								               text-white
+								               text-[11px]
+								               shadow-sm
+								               transition-all">
+								  ▼
+								</button>
+								` : '<div class="w-[24px]"></div>'}
 					
-					<button onclick="excluirItem(${item.id})"
-						  class="w-5 h-5 flex items-center justify-center
-						         rounded-full
-						         border border-slate-300
-						         text-slate-500
-						         text-xs font-bold
-						         bg-red-500
-						         text-white
-						         border-red-500
-						         transition-all">
-						  X
-						</button>
-				</div>
-			</div>
+								<button onclick="excluirItem(${item.id})"
+									  class="w-5 h-5 flex items-center justify-center
+									         rounded-full
+									         border border-slate-300
+									         text-slate-500
+									         text-xs font-bold
+									         bg-red-500
+									         text-white
+									         border-red-500
+									         transition-all">
+									  X
+									</button>
+							</div>
+						</div>
 
-		<!-- SUBLISTA DE DETALHES -->
-		<div class="sublista-detalhes hidden pl-12 pb-2 pt-1 text-sm text-slate-500 flex flex-col gap-1">
-			${item.detalhes ? item.detalhes.map(d => `
-			<div class="flex justify-between w-[75%] border-l-2 border-slate-200 pl-2">
-				<span>↳ Lançamento (Dia ${d.dia})</span>
-				<span class="font-semibold">R$ ${d.valor.toFixed(2)}</span>
-			</div>
-			`).join('') : ''}
-		</div>
-		`;
+						<!-- SUBLISTA DE DETALHES -->
+						<div class="sublista-detalhes hidden pl-12 pb-2 pt-1 text-sm text-slate-500 flex flex-col gap-1">
+							${item.detalhes ? item.detalhes.map(d => `
+							<div class="flex justify-between w-[75%] border-l-2 border-slate-200 pl-2">
+								<span>↳ Lançamento (Dia ${d.dia})</span>
+								<span class="font-semibold">R$ ${d.valor.toFixed(2)}</span>
+							</div>
+							`).join('') : ''}
+						</div>
+						`;
 
-		// CORREÇÃO 3: Agora conseguimos achar a seta e a sublista deste item específico
-		const botaoSeta = divContainerGasto.querySelector('.btn-seta');
-		const sublista = divContainerGasto.querySelector('.sublista-detalhes');
+						// CORREÇÃO 3: Agora conseguimos achar a seta e a sublista deste item específico
+						const botaoSeta = divContainerGasto.querySelector('.btn-seta');
+						const sublista = divContainerGasto.querySelector('.sublista-detalhes');
 
-		if (botaoSeta) {
-		  botaoSeta.addEventListener('click', () => {
-			const estaEscondido = sublista.classList.contains('hidden');
-			if (estaEscondido) {
-			  sublista.classList.remove('hidden');
-			  botaoSeta.textContent = '▲';
-			} else {
-			  sublista.classList.add('hidden');
-			  botaoSeta.textContent = '▼';
+						if (botaoSeta) {
+						  botaoSeta.addEventListener('click', () => {
+							const estaEscondido = sublista.classList.contains('hidden');
+							if (estaEscondido) {
+							  sublista.classList.remove('hidden');
+							  botaoSeta.textContent = '▲';
+							} else {
+							  sublista.classList.add('hidden');
+							  botaoSeta.textContent = '▼';
+							}
+						});
+    				}
+
+				    // Adiciona o bloco completo configurado dentro da sua lista real na tela
+				    container.appendChild(divContainerGasto);
+				  }); // <--- Fechamento correto do forEach
+
+				  displayTotal.innerText =
+				    `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
+				
+				  localStorage.setItem("gastos_pro", JSON.stringify(gastos));
 			}
-		});
-    }
-
-    // Adiciona o bloco completo configurado dentro da sua lista real na tela
-    container.appendChild(divContainerGasto);
-  }); // <--- Fechamento correto do forEach
-
-  displayTotal.innerText =
-    `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-
-  localStorage.setItem("gastos_pro", JSON.stringify(gastos));
-}
 
 
   function incluirPorTexto(texto) {
