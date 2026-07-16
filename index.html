@@ -58,7 +58,7 @@
 				<!-- TOTAL -->
 				<div class="bg-slate-700 text-white rounded-2xl p-8 mb-8 shadow-xl">
 		  			<div class="text-sm opacity-75 uppercase tracking-wider mb-2 flex items-center gap-2">
-					    <span>Montante Inicial: <span id="montanteInicial">R$ 0,00</span></span>
+					    <span>Saldo atual: <span id="montanteInicial">R$ 0,00</span></span>
 					    
 					    <!-- Input escondido que será usado apenas para abrir o teclado numérico com decimal -->
 					    <input type="number" id="inputDecimalEscondido" step="0.01" class="hidden w-20 bg-transparent border-b border-white focus:outline-none" />
@@ -187,6 +187,7 @@
 
 
 		    function renderizar() {
+				
 				const container = document.getElementById('listaGastos');
 				const displayTotal = document.getElementById('displayTotal');
 				const nomeMesDisplay = document.getElementById('nomeMes');
