@@ -305,22 +305,22 @@
 						});
     				}
 
-				  	// Adiciona o bloco completo configurado dentro da sua lista real na tela
-				    container.appendChild(divContainerGasto);
-				  }); // <--- Fechamento existente do forEach
+				    // Adiciona o bloco completo configurado dentro da sua lista real na tela
+					container.appendChild(divContainerGasto);
+				}); // <--- Fechamento existente do forEach
 
-				  // 🌟 NOVA LÓGICA DA META DIÁRIA 🌟
+				  // 🌟 CÁLCULO VIVO DA META DIÁRIA E SALDO 🌟
 				  
-				  // 1. Busca o montante inicial puro (gaveta independente) ou assume 0 se estiver vazio
+				  // 1. Busca o ponto de partida fixo do início do mês
 				  const montanteOriginal = parseFloat(localStorage.getItem('montanteInicialSalvo')) || 0;
 				  
-				  // 2. Descobre quantos dias faltam usando a função que você já tem pronta
-				  const diasQueFaltam = calcularDiasRestantes();
-				  
-				  // 3. Calcula o saldo que ainda sobrou para o mês
+				  // 2. Calcula o saldo vivo real que sobrou no bolso
 				  const saldoDisponivel = montanteOriginal - total;
 				  
-				  // 4. Calcula a meta do dia (Evita divisão por zero se o mês estiver no último dia)
+				  // 3. Descobre quantos dias faltam no calendário
+				  const diasQueFaltam = calcularDiasRestantes();
+				  
+				  // 4. Calcula a meta diária dividindo o saldo vivo pelos dias restantes
 				  let metaDiaria = 0;
 				  if (diasQueFaltam > 0) {
 				      metaDiaria = saldoDisponivel / diasQueFaltam;
@@ -328,11 +328,16 @@
 				      metaDiaria = saldoDisponivel; // Se for o último dia, a meta é tudo o que sobrou
 				  }
 				  
-				  // 5. Se a meta ficar negativa (gastou mais que o montante), zera para não ficar feio
+				  // 5. Trava de segurança para a meta não ficar negativa se estourar o orçamento
 				  if (metaDiaria < 0) metaDiaria = 0;
 
-				  // 6. Atualiza o display principal com o valor da meta diária recalculada
+				  // 6. Atualiza o display principal (Meta do Dia) com o valor recalculado ao vivo
 				  displayTotal.innerText = `R$ ${metaDiaria.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+				  
+				  // 7. Atualiza o display do Montante com o Saldo Restante Vivo daquele segundo
+				  if (textoMontante) {
+				      textoMontante.textContent = saldoDisponivel.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+				  }
 				
 				  localStorage.setItem("gastos_pro", JSON.stringify(gastos));
 			} // <--- Fechamento existente da função renderizar
