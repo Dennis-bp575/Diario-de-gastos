@@ -231,16 +231,16 @@
 					divContainerGasto.innerHTML = `
 						<!-- LINHA PRINCIPAL -->
 						<div class="flex items-center justify-between px-3 h-8 w-full">
-							<span class="text-right font-bold text-slate-700 min-w-[20px]">${item.dia}</span>
+							<span class="text-right font-bold text-white min-w-[20px]">${item.dia}</span>
 							<p>&nbsp</p>
 
 							<!-- NOME (50%) -->
-							<div class="w-[50%] text-[20px] font-semibold text-slate-800 truncate text-left leading-none">
+							<div class="w-[50%] text-[20px] font-semibold text-white truncate text-left leading-none">
 								${item.nome.charAt(0).toUpperCase() + item.nome.slice(1).toLowerCase()}
 							</div>
 
 							<!-- VALOR (30%) -->
-							<div class="w-[30%] text-right text-[16px] font-bold text-slate-700 leading-none">
+							<div class="w-[30%] text-right text-[16px] font-bold text-white leading-none">
 								R$ ${item.valor.toFixed(2)}
 							</div>
 							<p>&nbsp</p>
