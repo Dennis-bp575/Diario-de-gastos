@@ -166,18 +166,21 @@
 			    let valorDigitado = parseFloat(inputDecimal.value);
 			    
 			    if (!isNaN(valorDigitado)) {
-			        // Formata o valor digitado COM decimais
+			        // Formata o valor digitado COM decimais na tela
 			        textoMontante.textContent = valorDigitado.toLocaleString('pt-BR', {
 			            style: 'currency',
 			            currency: 'BRL'
 			        });
-				}
-		    
+			
+			        // 🌟 NOVA LINHA: Salva o número puro digitado no LocalStorage
+			        localStorage.setItem('montanteInicialSalvo', valorDigitado);
+			    }
+			
 			    // Esconde o input novamente
 			    inputDecimal.classList.add('hidden');
 			    inputDecimal.value = ''; 
 			});
-		
+
 			// Permite salvar também apertando a tecla Enter
 			inputDecimal.addEventListener('keydown', (e) => {
 			    if (e.key === 'Enter') {
