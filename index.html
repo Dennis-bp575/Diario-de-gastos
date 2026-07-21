@@ -120,7 +120,7 @@
 			const txtDiasRestantes = document.getElementById('dias-restantes');
 			
 			let abaAtual = 0;
-			let gastos = JSON.parse(localStorage.getItem("gastos_pro")) || [];
+			let gastos = JSON.parse(localStorage.getItem("gastos_diarios")) || [];
 
 			document.addEventListener('DOMContentLoaded', () => {
 			    // 1. Busca o montante salvo na gaveta independente
@@ -339,7 +339,7 @@
 				      textoMontante.textContent = saldoDisponivel.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 				  }
 				
-				  localStorage.setItem("gastos_pro", JSON.stringify(gastos));
+				  localStorage.setItem("gastos_diarios", JSON.stringify(gastos));
 			} // <--- Fechamento existente da função renderizar
 
 
